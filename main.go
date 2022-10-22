@@ -12,7 +12,7 @@ import (
 func main() {
 	token := os.Getenv("CLOUDFLARE_API_TOKEN")
 	if token == "" {
-		token = promptInput("Enter your CF api token")
+		token = promptSecret("Enter your CF api token")
 	}
 	api, err := cloudflare.NewWithAPIToken(token)
 	if err != nil {
@@ -40,6 +40,18 @@ func main() {
 		}
 		log.Printf("Deleted %s (%d/%d)", record.Name, index, len(records))
 	}
+}
+
+func promptSecret(text string) string {
+	p := promptui.Prompt{
+		Label:       text,
+		HideEntered: true,
+	}
+	value, err := p.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return value
 }
 
 func promptInput(text string) string {

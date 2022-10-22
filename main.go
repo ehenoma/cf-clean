@@ -10,17 +10,21 @@ import (
 )
 
 func main() {
-	api, err := cloudflare.NewWithAPIToken(os.Getenv("CLOUDFLARE_API_TOKEN"))
+	token := os.Getenv("CLOUDFLARE_API_TOKEN")
+	if token == "" {
+		token = promptInput("Enter your CF api token")
+	}
+	api, err := cloudflare.NewWithAPIToken(token)
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx := context.Background()
-	zoneName := promptInput("What is the Name of the Zone you want to clear?")
+	zoneName := promptInput("Enter the Zone Name")
 	id, err := api.ZoneIDByName(zoneName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	recordType := promptInput("What type of record do you want to clear?")
+	recordType := promptInput("Enter the DNS record type")
 	log.Printf("Listing %s records. This may take a few seconds...", recordType)
 	records, err := api.DNSRecords(ctx, id, cloudflare.DNSRecord{Type: recordType})
 	if err != nil {

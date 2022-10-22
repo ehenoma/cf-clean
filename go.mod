@@ -1,4 +1,4 @@
-module cf-clean
+module github.com/ehenoma/cf-clean
 
 go 1.19
 
